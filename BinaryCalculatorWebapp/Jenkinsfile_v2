@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        SERVICE_ACCOUNT= credentials('service_account')    // secret file for the GCP credential JSON file. I set it manually in Jenkins credentials
+           // secret file for the GCP credential JSON file. I set it manually in Jenkins credentials
         PROJECT = credentials('project_id')
         REPO_PATH= credentials("repo_path") // secret text for the repo path. I set it manually in Jenkins credentials
         APP_NAME = "binarycalculatorwebapp"
@@ -47,7 +47,7 @@ pipeline {
                 container('gcloud') {   // within the gcloud container
                     dir('BinaryCalculatorWebapp'){
                         // set the credential for gcloud within the container
-                        sh 'gcloud auth activate-service-account --key-file $SERVICE_ACCOUNT'
+                      
                         sh 'gcloud config set project $PROJECT'
                         sh 'gcloud builds submit -t $IMAGE_TAG --suppress-logs'
                     }
@@ -59,9 +59,9 @@ pipeline {
                 container('gcloud') {
                     dir('BinaryCalculatorWebapp'){
                         // set the credential for gcloud and kubectl within the container
-                        sh 'gcloud auth activate-service-account --key-file $SERVICE_ACCOUNT'
+                        
                         sh 'gcloud config set project $PROJECT'
-                        sh 'gcloud container clusters get-credentials $CLUSTER --region=$CLUSTER_ZONE'
+                        sh 'gcloud container clusters get-credentials $CLUSTER --zone=$CLUSTER_ZONE'
                         script{
                             try{
                                 // delete it if a previous deployment exists
@@ -83,9 +83,9 @@ pipeline {
                 container('gcloud') {
                     dir('BinaryCalculatorWebapp'){
                         // set the credential for gcloud and kubectl within the container
-                        sh 'gcloud auth activate-service-account --key-file $SERVICE_ACCOUNT'
+                        
                         sh 'gcloud config set project $PROJECT'
-                        sh 'gcloud container clusters get-credentials $CLUSTER --region=$CLUSTER_ZONE'
+                        sh 'gcloud container clusters get-credentials $CLUSTER --zone=$CLUSTER_ZONE'
                         script{
                             try{
                                 // create if it the service doesn't exist. No need to recreate it
